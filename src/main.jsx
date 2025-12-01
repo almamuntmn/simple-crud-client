@@ -3,8 +3,37 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 
+import { createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+import MainLayout from './layoutss/MainLayout.jsx';
+import UserDetail from './components/UserDetail.jsx';
+import UpdateUser from './components/UpdateUser.jsx';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout></MainLayout>,
+    children: [
+      {
+        path: "/",
+        element: <App />,
+      },
+      {
+        path: "/users/:id",
+        loader: ({ params }) => fetch(`http://localhost:3000/users/${params.id}`),
+        element: <UserDetail></UserDetail>,
+      },
+      {
+        path: "/update/:id",
+        loader: ({ params }) => fetch(`http://localhost:3000/users/${params.id}`),
+        element: <UpdateUser></UpdateUser>,
+      }
+    ],
+  },
+]);
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
 )
